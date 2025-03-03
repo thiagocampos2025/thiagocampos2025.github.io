@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa da Yasmin</title>
+    <style>
+        body {
+            background: url('imagem/fundo.jpg') no-repeat center center fixed;
+            background-size: contain;
+            background-position: top;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        .grid div {
+            background: rgba(255, 255, 255, 0.3); /* Fundo branco mais transparente */
+            color: black; /* Texto visível */
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .grid div:hover {
+            background: rgba(255, 0, 179, 0.014); /* Laranja transparente ao passar o mouse */
+        }
+        .pix {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        .instagram {
+            margin-top: 15px;
+        }
+        .instagram a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ajude a Yasmin a realizar a viagem final YAGP Tampa, Flórida - EUA</h1>
+        <div class="grid">
+            <!-- Gera 150 números automaticamente -->
+            <script>
+                for (let i = 1; i <= 150; i++) {
+                    document.write(`<div>${i}</div>`);
+                }
+            </script>
+        </div>
+        <p class="pix">Faça um PIX para: <strong>chavepix@exemplo.com</strong></p>
+        <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yasmin" target="_blank">Instagram</a></p>
+    </div>
+</body>
+</html>
