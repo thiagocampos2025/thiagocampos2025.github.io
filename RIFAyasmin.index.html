@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa da Yasmin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            background: url('imagem/fundo.jpg') no-repeat center center;
+            background-size: cover;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .grid-container {
+            height: 50vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        .grid div {
+            background: rgba(255, 255, 255, 0.3);
+            color: black;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+        .grid div:hover {
+            background: rgba(255, 215, 0, 0.6);
+        }
+        .selected {
+            background: gold;
+            color: black;
+            font-weight: bold;
+        }
+        .input-name {
+            display: none;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            font-size: 16px;
+            padding: 8px;
+            border: 2px solid #FFD700;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            color: #333;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+        }
+        .input-name:focus {
+            border-color: #ff9900;
+            outline: none;
+            background-color: rgba(255, 255, 255, 1);
+        }
+        .confirmed {
+            background: rgba(0, 128, 0, 0.6);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+        }
+        .pix {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        .instagram {
+            margin-top: 15px;
+        }
+        .instagram a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .descricao {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Yasmin Campos em YAGP Tampa, Flórida - EUA</h1>
+
+        <!-- Grid de Números da Rifa -->
+        <div class="grid-container">
+            <div class="grid" id="grid">
+                <!-- Números da rifa serão gerados dinamicamente -->
+            </div>
+        </div>
+
+        <p class="pix">Faça um PIX para: <strong>100.794.301-71</strong></p>
+        <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
+
+        <!-- Descrição sobre a rifa -->
+        <div class="descricao">
+            <p><strong>Sobre a rifa:</strong> O valor arrecadado ajudará a Yasmin a participar do YAGP em Tampa, Flórida. Escolha seu número e boa sorte!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let grid = document.getElementById("grid");
+
+            // Geração dos números da rifa
+            for (let i = 1; i <= 150; i++) {
+                let div = document.createElement("div");
+                div.textContent = i;
+                div.dataset.numero = i;
+
+                // Campo de entrada para nome
+                let input = document.createElement("input");
+                input.type = "text";
+                input.placeholder = "Seu nome";
+                input.classList.add("input-name");
+
+                // Variável para garantir que o número só seja confirmado uma vez
+                let nomeConfirmado = false;
+
+                // Evento de clique para selecionar número
+                div.addEventListener("click", function () {
+                    if (this.classList.contains("selected")) {
+                        // Permitir reescrever o nome se já foi confirmado
+                        if (nomeConfirmado) {
+                            input.style.display = "block";
+                            input.focus();
+                            this.classList.remove("confirmed");
+                            nomeConfirmado = false;
+                        }
+                    } else {
+                        if (!nomeConfirmado) {
+                            this.classList.add("selected");
+                            input.style.display = "block";
+                            input.focus();
+                        }
+                    }
+                });
+
+                // Evento para confirmar o nome
+                input.addEventListener("blur", function () {
+                    if (this.value.trim() !== "") {
+                        nomeConfirmado = true; // Nome confirmado
+                        this.disabled = true;  // Desabilita o campo de texto para não permitir mais alterações
+                        div.classList.add("confirmed"); // Adiciona a classe de destaque ao número
+                    }
+                });
+
+                div.appendChild(input);
+                grid.appendChild(div);
+            }
+        });
+    </script>
+</body>
+</html>
