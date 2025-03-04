@@ -61,6 +61,7 @@
             color: white;
             font-weight: bold;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+            pointer-events: none;
         }
         .pix {
             font-size: 18px;
@@ -127,32 +128,30 @@
             background: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
+        .name-list {
+            margin-top: 10px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1> Yasmin Campos em YAGP Tampa, Flórida - EUA</h1>
 
-    <!-- Grid de Números da Rifa -->
     <div class="grid-container">
-        <div class="grid" id="grid">
-            <!-- Números da rifa serão gerados dinamicamente -->
-        </div>
+        <div class="grid" id="grid"></div>
     </div>
 
     <p class="pix">Faça um PIX para: <strong>100.794.301-71</strong></p>
     <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
 
-    <!-- Descrição sobre a rifa -->
     <div class="descricao">
         <p><strong>Sobre a rifa:</strong> O valor arrecadado ajudará a Yasmin a participar do YAGP em Tampa, Flórida. Escolha seu número e boa sorte!</p>
     </div>
 </div>
 
-<!-- Overlay -->
 <div class="overlay" id="overlay"></div>
 
-<!-- Popup de nome -->
 <div class="popup" id="popup">
     <h2>Escolha um número</h2>
     <p id="popup-numero"></p>
@@ -161,7 +160,23 @@
     <button class="cancel" id="btn-cancelar">Cancelar</button>
 </div>
 
-<script>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDhWfOThP5KvfD3zRYWBC6pe_I_5B814VQ",
+        authDomain: "thiagocampos2025-7421b.firebaseapp.com",
+        databaseURL: "https://thiagocampos2025-7421b-default-rtdb.firebaseio.com",
+        projectId: "thiagocampos2025-7421b",
+        storageBucket: "thiagocampos2025-7421b.appspot.com",
+        messagingSenderId: "495707238242",
+        appId: "1:495707238242:web:af16e438fd49d14005463b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
     document.addEventListener("DOMContentLoaded", function () {
         let grid = document.getElementById("grid");
         let overlay = document.getElementById("overlay");
@@ -171,54 +186,81 @@
         let btnConfirmar = document.getElementById("btn-confirmar");
         let btnCancelar = document.getElementById("btn-cancelar");
 
-        let selectedDiv = null;
-        let confirmedNumbers = {}; // Armazena os números confirmados
+        let selectedNumbers = [];
 
-        // Geração dos números da rifa
+        // Criar os números de 1 a 150
         for (let i = 1; i <= 150; i++) {
             let div = document.createElement("div");
             div.textContent = i;
             div.dataset.numero = i;
 
             div.addEventListener("click", function () {
-                if (this.classList.contains("confirmed")) {
-                    alert("Esse número já foi escolhido!");
-                    return;
-                }
+                if (div.classList.contains("confirmed")) return;
 
-                selectedDiv = this;
                 popupNumero.textContent = "Número selecionado: " + this.dataset.numero;
                 inputNome.value = "";
                 popup.style.display = "block";
                 overlay.style.display = "block";
-                inputNome.focus();
+                div.classList.add("selected");
             });
 
             grid.appendChild(div);
         }
 
-        // Confirmação do nome
+        // Função para carregar os nomes salvos no Firebase
+        function loadNames() {
+            get(ref(db, "rifa"))
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        const rifaData = snapshot.val();
+                        for (let numero in rifaData) {
+                            let name = rifaData[numero].nome;
+                            let numberDiv = document.querySelector(`[data-numero='${numero}']`);
+                            if (numberDiv) {
+                                let nameElement = document.createElement("div");
+                                nameElement.classList.add("name-list");
+                                nameElement.textContent = name;
+                                numberDiv.appendChild(nameElement);
+                                numberDiv.classList.add("confirmed");
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar os dados do Firebase:", error);
+                });
+        }
+
+        // Carregar os nomes ao carregar a página
+        loadNames();
+
         btnConfirmar.addEventListener("click", function () {
             let nome = inputNome.value.trim();
+            let numero = popupNumero.textContent.split(": ")[1];
+
             if (nome === "") {
                 alert("Por favor, digite seu nome.");
                 return;
             }
 
-            let numero = selectedDiv.dataset.numero;
-            confirmedNumbers[numero] = nome;
+            set(ref(db, "rifa/" + numero), { nome })
+                .then(() => {
+                    alert("Número confirmado!");
 
-            selectedDiv.classList.add("confirmed");
-            selectedDiv.textContent = `${numero} - ${nome}`;
-            selectedDiv.removeEventListener("click", () => {});
+                    let numberDiv = document.querySelector(`[data-numero='${numero}']`);
+                    numberDiv.classList.remove("selected");
+                    numberDiv.classList.add("confirmed");
 
-            console.log(confirmedNumbers); // Mostra os números escolhidos no console
+                    let nameElement = document.createElement("div");
+                    nameElement.classList.add("name-list");
+                    nameElement.textContent = nome;
+                    numberDiv.appendChild(nameElement);
+                });
 
             popup.style.display = "none";
             overlay.style.display = "none";
         });
 
-        // Cancelar a escolha
         btnCancelar.addEventListener("click", function () {
             popup.style.display = "none";
             overlay.style.display = "none";
