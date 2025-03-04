@@ -16,7 +16,7 @@
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
             width: 90%;
-            max-width: 600px;
+            max-width: 1500px;
             margin: 20px auto;
             border-radius: 10px;
             position: relative;
@@ -29,7 +29,8 @@
             font-size: 24px;
         }
         .grid-container {
-            height: 50vh;
+            height: 100%;
+            width: 100%;
             overflow-y: auto;
             margin-bottom: 20px;
         }
@@ -160,9 +161,11 @@
             font-size: 14px !important;
             color: white !important;/* Cor do texto (nome) */
             background-color: green !important; /* Fundo amarelo */
-            padding: 5px; /* Adiciona um pouco de espaçamento ao redor do nome */
-            border-radius: 3px; /* Bordas arredondadas para o fundo */
-
+            border-radius: 3px !important; /* Bordas arredondadas para o fundo */
+            word-wrap: break-word !important; /* Permite quebrar a palavra quando necessário */
+            overflow-wrap: break-word !important; /* Garantir que as palavras que ultrapassam o limite quebrem corretamente */
+            max-width: 5em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
+            white-space: normal !important; /* Permite que o texto seja quebrado em várias linhas */
         }
     </style>
 </head>
