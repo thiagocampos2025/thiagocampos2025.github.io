@@ -56,27 +56,6 @@
             color: black;
             font-weight: bold;
         }
-        .input-name {
-            display: none;
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            font-size: 16px;
-            padding: 8px;
-            border: 2px solid #FFD700;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            color: #333;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
-        }
-        .input-name:focus {
-            border-color: #ff9900;
-            outline: none;
-            background-color: rgba(255, 255, 255, 1);
-        }
         .confirmed {
             background: rgba(0, 128, 0, 0.6);
             color: white;
@@ -102,79 +81,149 @@
             border-radius: 10px;
             font-size: 16px;
         }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 300px;
+            z-index: 1000;
+        }
+        .popup input {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .popup button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup .confirm {
+            background: green;
+            color: white;
+        }
+        .popup .cancel {
+            background: red;
+            color: white;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1> Yasmin Campos em YAGP Tampa, Flórida - EUA</h1>
+<div class="container">
+    <h1> Yasmin Campos em YAGP Tampa, Flórida - EUA</h1>
 
-        <!-- Grid de Números da Rifa -->
-        <div class="grid-container">
-            <div class="grid" id="grid">
-                <!-- Números da rifa serão gerados dinamicamente -->
-            </div>
-        </div>
-
-        <p class="pix">Faça um PIX para: <strong>100.794.301-71</strong></p>
-        <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
-
-        <!-- Descrição sobre a rifa -->
-        <div class="descricao">
-            <p><strong>Sobre a rifa:</strong> O valor arrecadado ajudará a Yasmin a participar do YAGP em Tampa, Flórida. Escolha seu número e boa sorte!</p>
+    <!-- Grid de Números da Rifa -->
+    <div class="grid-container">
+        <div class="grid" id="grid">
+            <!-- Números da rifa serão gerados dinamicamente -->
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            let grid = document.getElementById("grid");
+    <p class="pix">Faça um PIX para: <strong>100.794.301-71</strong></p>
+    <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
 
-            // Geração dos números da rifa
-            for (let i = 1; i <= 150; i++) {
-                let div = document.createElement("div");
-                div.textContent = i;
-                div.dataset.numero = i;
+    <!-- Descrição sobre a rifa -->
+    <div class="descricao">
+        <p><strong>Sobre a rifa:</strong> O valor arrecadado ajudará a Yasmin a participar do YAGP em Tampa, Flórida. Escolha seu número e boa sorte!</p>
+    </div>
+</div>
 
-                // Campo de entrada para nome
-                let input = document.createElement("input");
-                input.type = "text";
-                input.placeholder = "Seu nome";
-                input.classList.add("input-name");
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
 
-                // Variável para garantir que o número só seja confirmado uma vez
-                let nomeConfirmado = false;
+<!-- Popup de nome -->
+<div class="popup" id="popup">
+    <h2>Escolha um número</h2>
+    <p id="popup-numero"></p>
+    <input type="text" id="input-nome" placeholder="Digite seu nome">
+    <button class="confirm" id="btn-confirmar">Confirmar</button>
+    <button class="cancel" id="btn-cancelar">Cancelar</button>
+</div>
 
-                // Evento de clique para selecionar número
-                div.addEventListener("click", function () {
-                    if (this.classList.contains("selected")) {
-                        // Permitir reescrever o nome se já foi confirmado
-                        if (nomeConfirmado) {
-                            input.style.display = "block";
-                            input.focus();
-                            this.classList.remove("confirmed");
-                            nomeConfirmado = false;
-                        }
-                    } else {
-                        if (!nomeConfirmado) {
-                            this.classList.add("selected");
-                            input.style.display = "block";
-                            input.focus();
-                        }
-                    }
-                });
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let grid = document.getElementById("grid");
+        let overlay = document.getElementById("overlay");
+        let popup = document.getElementById("popup");
+        let popupNumero = document.getElementById("popup-numero");
+        let inputNome = document.getElementById("input-nome");
+        let btnConfirmar = document.getElementById("btn-confirmar");
+        let btnCancelar = document.getElementById("btn-cancelar");
 
-                // Evento para confirmar o nome
-                input.addEventListener("blur", function () {
-                    if (this.value.trim() !== "") {
-                        nomeConfirmado = true; // Nome confirmado
-                        this.disabled = true;  // Desabilita o campo de texto para não permitir mais alterações
-                        div.classList.add("confirmed"); // Adiciona a classe de destaque ao número
-                    }
-                });
+        let selectedDiv = null;
+        let confirmedNumbers = {}; // Armazena os números confirmados
 
-                div.appendChild(input);
-                grid.appendChild(div);
+        // Geração dos números da rifa
+        for (let i = 1; i <= 150; i++) {
+            let div = document.createElement("div");
+            div.textContent = i;
+            div.dataset.numero = i;
+
+            div.addEventListener("click", function () {
+                if (this.classList.contains("confirmed")) {
+                    alert("Esse número já foi escolhido!");
+                    return;
+                }
+
+                selectedDiv = this;
+                popupNumero.textContent = "Número selecionado: " + this.dataset.numero;
+                inputNome.value = "";
+                popup.style.display = "block";
+                overlay.style.display = "block";
+                inputNome.focus();
+            });
+
+            grid.appendChild(div);
+        }
+
+        // Confirmação do nome
+        btnConfirmar.addEventListener("click", function () {
+            let nome = inputNome.value.trim();
+            if (nome === "") {
+                alert("Por favor, digite seu nome.");
+                return;
             }
+
+            let numero = selectedDiv.dataset.numero;
+            confirmedNumbers[numero] = nome;
+
+            selectedDiv.classList.add("confirmed");
+            selectedDiv.textContent = `${numero} - ${nome}`;
+            selectedDiv.removeEventListener("click", () => {});
+
+            console.log(confirmedNumbers); // Mostra os números escolhidos no console
+
+            popup.style.display = "none";
+            overlay.style.display = "none";
         });
-    </script>
+
+        // Cancelar a escolha
+        btnCancelar.addEventListener("click", function () {
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        });
+    });
+</script>
 </body>
 </html>
