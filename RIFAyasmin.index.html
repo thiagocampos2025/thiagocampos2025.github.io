@@ -68,10 +68,9 @@
             pointer-events: none;
         }
         .titulo {
-            font-size: 18px;
+            font-size: 35px;
             margin-top: 15px;
             font-weight: bold;
-            font-size: x-large;
             color: white;
             text-shadow:
                     2px 2px 0px #000,  /* sombra inferior direita */
@@ -81,27 +80,42 @@
         }
 
         .pix {
-            font-size: 18px;
+            font-size: 35px;
             margin-top: 15px;
             font-weight: bold;
-            font-size: 35px;
             color: lawngreen;
         }
 
         .valor {
-            font-size: 18px;
             margin-top: 15px;
             font-weight: bold;
             font-size: 30px;
             color: lawngreen;
+            margin-bottom: 0 !important; /* Remover a margem inferior do valor */
         }
+        .confPag {
+            font-size: 18px;
+            font-weight: bold;
+            color: lawngreen;
+            margin-bottom: 0 !important; /* Remover a margem inferior do valor */
+        }
+
+        .container .valor {
+            margin-bottom: 5px;
+        }
+
+        .container .confPag {
+            margin-top: 0;
+            margin-bottom: 45px !important;
+        }
+
         .instagram {
-            margin-top: 15px;
+            margin-top: 26px !important;
         }
         .instagram a {
             color: #FFD700;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 22px;
         }
 
         .premio {
@@ -169,14 +183,22 @@
         .name-list {
             margin-top: 5px !important;
             font-size: 14px !important;
-            color: white !important;/* Cor do texto (nome) */
-            background-color: green !important; /* Fundo amarelo */
+            /*background-color: green !important; !* Fundo amarelo *!*/
             border-radius: 3px !important; /* Bordas arredondadas para o fundo */
             word-wrap: break-word !important; /* Permite quebrar a palavra quando necessário */
             overflow-wrap: break-word !important; /* Garantir que as palavras que ultrapassam o limite quebrem corretamente */
             max-width: 5em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
             white-space: normal !important; /* Permite que o texto seja quebrado em várias linhas */
         }
+        .name-list.amarelo {
+            background-color: yellow;
+            color: black;
+        }
+        .name-list.verde {
+            background-color: green;
+            color: white;
+        }
+
         /* Media Queries para responsividade */
 
         @media (max-width: 768px) {
@@ -251,9 +273,10 @@
         <div class="grid" id="grid"></div>
     </div>
 
-    <p class="valor">Valor R$ 20,00</p>
+    <p class="valor">Valor R$ 20,00 </p>
+    <p class="confPag">(Após confirmação do pagamento o número será validado.)</p>
     <p class="pix">PIX 100.794.301-71</p>
-    <p class="premio">PRÊMIO: Cesta de presentes kit Natura: <a href="imagem/Premio.jpg" target="_blank">Veja o Prêmio</a></p>
+    <p class="premio"> Veja o prêmio que você pode ganhar clicando <a href="imagem/Premio.jpg" target="_blank"> aqui!</a></p>
     <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
 
     <div class="descricao">
@@ -325,10 +348,18 @@
                         const rifaData = snapshot.val();
                         for (let numero in rifaData) {
                             let name = rifaData[numero].nome;
+                            let pago = rifaData[numero].pago;
                             let numberDiv = document.querySelector(`[data-numero='${numero}']`);
                             if (numberDiv) {
                                 let nameElement = document.createElement("div");
                                 nameElement.classList.add("name-list");
+
+                                if (pago) {
+                                    nameElement.classList.add("verde");
+                                } else {
+                                    nameElement.classList.add("amarelo");
+                                }
+
                                 nameElement.textContent = name;
                                 numberDiv.appendChild(nameElement);
                                 numberDiv.classList.add("confirmed");
@@ -359,7 +390,7 @@
                 return;
             }
 
-            set(ref(db, "rifa/" + numero), { nome })
+            set(ref(db, "rifa/" + numero), {  nome, pago: false  })
                 .then(() => {
                     alert("Número confirmado!");
 
@@ -370,6 +401,9 @@
                     let nameElement = document.createElement("div");
                     nameElement.classList.add("name-list");
                     nameElement.textContent = nome;
+                    numberDiv.appendChild(nameElement);
+                    nameElement.classList.add("amarelo");  // Definir o fundo como amarelo inicialmente
+
                     numberDiv.appendChild(nameElement);
                 });
 
