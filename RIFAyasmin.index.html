@@ -167,6 +167,70 @@
             max-width: 5em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
             white-space: normal !important; /* Permite que o texto seja quebrado em várias linhas */
         }
+        /* Media Queries para responsividade */
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                max-width: 100%;
+            }
+
+            .titulo {
+                font-size: 20px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(5, 1fr); /* Reduzir para 5 colunas */
+            }
+
+            .grid div {
+                padding: 15px; /* Menos padding para ajustar melhor na tela menor */
+                font-size: 16px; /* Menor tamanho de fonte */
+            }
+
+            .valor, .pix, .instagram a {
+                font-size: 16px; /* Ajuste de fonte para dispositivos móveis */
+            }
+
+            .descricao {
+                font-size: 14px; /* Menor tamanho de fonte */
+            }
+
+            .popup {
+                width: 80%; /* Aumenta o tamanho do popup */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas menores */
+            }
+
+            .grid div {
+                padding: 12px; /* Menor padding para se ajustar ainda melhor */
+                font-size: 14px; /* Font menor */
+            }
+
+            .valor, .pix, .instagram a {
+                font-size: 14px; /* Fonte ainda menor */
+            }
+
+            .name-list {
+                max-width: 10em; /* Ajuste para que os nomes caibam melhor */
+            }
+
+            .descricao {
+                font-size: 12px; /* Fonte menor para texto de descrição */
+            }
+        }
     </style>
 </head>
 <body>
