@@ -254,7 +254,7 @@
 
 <div class="popup" id="popup">
     <h2 id="popup-numero" style="color: black"></h2>
-    <input type="text" id="input-nome" placeholder="Digite seu nome">
+    <input type="text" id="input-nome" placeholder="Digite seu nome completo">
     <button class="confirm" id="btn-confirmar">Confirmar</button>
     <button class="cancel" id="btn-cancelar">Cancelar</button>
 </div>
@@ -338,7 +338,13 @@
             let numero = popupNumero.textContent.split(": ")[1];
 
             if (nome === "") {
-                alert("Por favor, digite seu nome.");
+                alert("Por favor, digite seu nome completo.");
+                return;
+            }
+
+            // Verificar se o nome tem pelo menos 15 caracteres
+            if (nome.length < 15) {
+                alert("O nome deve ter pelo menos 15 caracteres.");
                 return;
             }
 
