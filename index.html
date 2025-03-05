@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rifa da Yasmin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            width: 90%;
+            max-width: 1500px;
+            margin: 20px auto;
+            border-radius: 10px;
+            position: relative;
+            z-index: 1;
+            background: url('imagem/fundo.jpg') no-repeat center center;
+            background-size: cover;
+            opacity: 80%;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        .grid-container {
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            padding: 10px;
+        }
+        .grid div {
+            background: rgba(253, 253, 253, 0.64);
+            opacity: 90%;
+            font-weight: bold;
+            color: black;
+            padding: 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+        }
+        .grid div:hover {
+            background: rgba(255, 215, 0, 0.6);
+        }
+        .selected {
+            background: gold;
+            color: black;
+            font-weight: bold;
+        }
+        .confirmed {
+            background: rgba(0, 128, 0, 0.6);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.6);
+            pointer-events: none;
+        }
+        .titulo {
+            font-size: 35px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: white;
+            text-shadow:
+                    2px 2px 0px #000,  /* sombra inferior direita */
+                    -2px -2px 0px #000, /* sombra superior esquerda */
+                    2px -2px 0px #000, /* sombra superior direita */
+                    -2px 2px 0px #000; /* sombra inferior esquerda */
+        }
+
+        .pix {
+            font-size: 35px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: lawngreen;
+        }
+
+        .valor {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 30px;
+            color: lawngreen;
+            margin-bottom: 0 !important; /* Remover a margem inferior do valor */
+        }
+        .confPag {
+            font-size: 18px;
+            font-weight: bold;
+            color: lawngreen;
+            margin-bottom: 0 !important; /* Remover a margem inferior do valor */
+        }
+
+        .container .valor {
+            margin-bottom: 5px;
+        }
+
+        .container .confPag {
+            margin-top: 0;
+            margin-bottom: 45px !important;
+        }
+
+        .instagram {
+            margin-top: 26px !important;
+        }
+        .instagram a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 22px;
+        }
+
+        .premio {
+            font-size: 30px;
+        }
+
+        .premio a {
+            color: #FFD700;
+            text-decoration: none;
+            font-size: 30px;
+        }
+        .descricao {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 300px;
+            z-index: 1000;
+        }
+        .popup input {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .popup button {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .popup .confirm {
+            background: green;
+            color: white;
+        }
+        .popup .cancel {
+            background: red;
+            color: white;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .name-list {
+            margin-top: 5px !important;
+            font-size: 14px !important;
+            /*background-color: green !important; !* Fundo amarelo *!*/
+            border-radius: 3px !important; /* Bordas arredondadas para o fundo */
+            word-wrap: break-word !important; /* Permite quebrar a palavra quando necessário */
+            overflow-wrap: break-word !important; /* Garantir que as palavras que ultrapassam o limite quebrem corretamente */
+            max-width: 5em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
+            white-space: normal !important; /* Permite que o texto seja quebrado em várias linhas */
+        }
+        .name-list.amarelo {
+            background-color: yellow;
+            color: black;
+        }
+        .name-list.verde {
+            background-color: green;
+            color: white;
+        }
+
+        /* Media Queries para responsividade */
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                max-width: 100%;
+            }
+
+            .titulo {
+                font-size: 20px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(5, 1fr); /* Reduzir para 5 colunas */
+            }
+
+            .grid div {
+                padding: 15px; /* Menos padding para ajustar melhor na tela menor */
+                font-size: 16px; /* Menor tamanho de fonte */
+            }
+
+            .valor, .pix, .instagram a {
+                font-size: 16px; /* Ajuste de fonte para dispositivos móveis */
+            }
+
+            .descricao {
+                font-size: 14px; /* Menor tamanho de fonte */
+            }
+
+            .popup {
+                width: 80%; /* Aumenta o tamanho do popup */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .grid {
+                grid-template-columns: repeat(3, 1fr); /* 3 colunas em telas menores */
+            }
+
+            .grid div {
+                padding: 12px; /* Menor padding para se ajustar ainda melhor */
+                font-size: 14px; /* Font menor */
+            }
+
+            .valor, .pix, .instagram a {
+                font-size: 28px; /* Fonte ainda menor */
+            }
+
+            .name-list {
+                max-width: 10em; /* Ajuste para que os nomes caibam melhor */
+            }
+
+            .descricao {
+                font-size: 12px; /* Fonte menor para texto de descrição */
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="titulo"> Yasmin Campos em YAGP Tampa, Flórida - EUA</h1>
+
+    <div class="grid-container">
+        <div class="grid" id="grid"></div>
+    </div>
+
+    <p class="valor">Valor R$ 15,00 </p>
+    <p class="confPag">(Após confirmação do pagamento o número será validado.)</p>
+    <p class="pix">PIX 012.408.571-79</p>
+    <p class="premio"> Veja o prêmio que você pode ganhar clicando <a href="imagem/Premio.jpg" target="_blank"> aqui!</a></p>
+    <p class="instagram">Conheça mais sobre a Yasmin: <a href="https://www.instagram.com/yas_camposs_" target="_blank">Instagram</a></p>
+
+    <div class="descricao">
+        <p style="font-size: 20px"><strong>Sobre a rifa:</strong> O valor arrecadado ajudará a Yasmin a participar do YAGP (Campeonato Internacional de Balé) em Tampa, Flórida. Escolha seu número e boa sorte!</p>
+    </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="popup" id="popup">
+    <h2 id="popup-numero" style="color: black"></h2>
+    <input type="text" id="input-nome" placeholder="Digite seu nome completo">
+    <input type="text" id="input-nome" placeholder="Digite seu contato">
+    <button class="confirm" id="btn-confirmar">Confirmar</button>
+    <button class="cancel" id="btn-cancelar">Cancelar</button>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDhWfOThP5KvfD3zRYWBC6pe_I_5B814VQ",
+        authDomain: "thiagocampos2025-7421b.firebaseapp.com",
+        databaseURL: "https://thiagocampos2025-7421b-default-rtdb.firebaseio.com",
+        projectId: "thiagocampos2025-7421b",
+        storageBucket: "thiagocampos2025-7421b.appspot.com",
+        messagingSenderId: "495707238242",
+        appId: "1:495707238242:web:af16e438fd49d14005463b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let grid = document.getElementById("grid");
+        let overlay = document.getElementById("overlay");
+        let popup = document.getElementById("popup");
+        let popupNumero = document.getElementById("popup-numero");
+        let popupContato = document.getElementById("popup-Contato");
+        let inputNome = document.getElementById("input-nome");
+        let btnConfirmar = document.getElementById("btn-confirmar");
+        let btnCancelar = document.getElementById("btn-cancelar");
+
+        let selectedNumbers = [];
+
+        // Criar os números de 1 a 150
+        for (let i = 1; i <= 150; i++) {
+            let div = document.createElement("div");
+            div.textContent = i;
+            div.dataset.numero = i;
+
+            div.addEventListener("click", function () {
+                if (div.classList.contains("confirmed")) return;
+
+                popupNumero.textContent = "Número selecionado: " + this.dataset.numero;
+                inputNome.value = "";
+                popup.style.display = "block";
+                overlay.style.display = "block";
+                div.classList.add("selected");
+            });
+
+            grid.appendChild(div);
+        }
+
+        // Função para carregar os nomes salvos no Firebase
+        function loadNames() {
+            get(ref(db, "rifa"))
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        const rifaData = snapshot.val();
+                        for (let numero in rifaData) {
+                            let name = rifaData[numero].nome;
+                            let pago = rifaData[numero].pago;
+                            let numberDiv = document.querySelector(`[data-numero='${numero}']`);
+                            if (numberDiv) {
+                                let nameElement = document.createElement("div");
+                                nameElement.classList.add("name-list");
+
+                                if (pago) {
+                                    nameElement.classList.add("verde");
+                                } else {
+                                    nameElement.classList.add("amarelo");
+                                }
+
+                                nameElement.textContent = name;
+                                numberDiv.appendChild(nameElement);
+                                numberDiv.classList.add("confirmed");
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao carregar os dados do Firebase:", error);
+                });
+        }
+
+        // Carregar os nomes ao carregar a página
+        loadNames();
+
+        btnConfirmar.addEventListener("click", function () {
+            let nome = inputNome.value.trim();
+            let numero = popupNumero.textContent.split(": ")[1];
+
+            if (nome === "") {
+                alert("Por favor, digite seu nome completo.");
+                return;
+            }
+
+            // Verificar se o nome tem pelo menos 15 caracteres
+            if (nome.length < 15) {
+                alert("O nome deve ter pelo menos 15 caracteres.");
+                return;
+            }
+
+            set(ref(db, "rifa/" + numero), {  nome, pago: false  })
+                .then(() => {
+                    alert("Número confirmado!");
+
+                    let numberDiv = document.querySelector(`[data-numero='${numero}']`);
+                    numberDiv.classList.remove("selected");
+                    numberDiv.classList.add("confirmed");
+
+                    let nameElement = document.createElement("div");
+                    nameElement.classList.add("name-list");
+                    nameElement.textContent = nome;
+                    numberDiv.appendChild(nameElement);
+                    nameElement.classList.add("amarelo");  // Definir o fundo como amarelo inicialmente
+
+                    numberDiv.appendChild(nameElement);
+                });
+
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        });
+
+        btnCancelar.addEventListener("click", function () {
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        });
+    });
+</script>
+</body>
+</html>
