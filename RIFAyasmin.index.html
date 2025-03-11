@@ -15,7 +15,7 @@
         .container {
             background: rgba(0, 0, 0, 0.7);
             padding: 20px;
-            width: 90%;
+            width: 100%;
             max-width: 1500px;
             margin: 20px auto;
             border-radius: 10px;
@@ -36,7 +36,8 @@
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(10, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+
             gap: 5px;
             padding: 10px;
         }
@@ -187,7 +188,7 @@
             border-radius: 3px !important; /* Bordas arredondadas para o fundo */
             word-wrap: break-word !important; /* Permite quebrar a palavra quando necessário */
             overflow-wrap: break-word !important; /* Garantir que as palavras que ultrapassam o limite quebrem corretamente */
-            max-width: 5em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
+            max-width: 10em !important; /* Limita a largura da div, para que o nome não ultrapasse 12 caracteres */
             white-space: normal !important; /* Permite que o texto seja quebrado em várias linhas */
         }
         .name-list.amarelo {
@@ -289,7 +290,8 @@
 
 <div class="popup" id="popup">
     <h2 id="popup-numero" style="color: black"></h2>
-    <input type="text" id="input-nome" placeholder="Digite seu nome completo e contato">
+    <input type="text" id="input-nome" placeholder="Digite seu nome completo">
+    <input type="text" id="input-contato" placeholder="Digite seu contato">
     <button class="confirm" id="btn-confirmar">Confirmar</button>
     <button class="cancel" id="btn-cancelar">Cancelar</button>
 </div>
@@ -317,6 +319,7 @@
         let popup = document.getElementById("popup");
         let popupNumero = document.getElementById("popup-numero");
         let inputNome = document.getElementById("input-nome");
+        let inputContato = document.getElementById("input-contato");
         let btnConfirmar = document.getElementById("btn-confirmar");
         let btnCancelar = document.getElementById("btn-cancelar");
 
@@ -348,7 +351,8 @@
                     if (snapshot.exists()) {
                         const rifaData = snapshot.val();
                         for (let numero in rifaData) {
-                            let name = rifaData[numero].nome;
+                            let nome = rifaData[numero].nome;
+                            let contato = rifaData[numero].contato;
                             let pago = rifaData[numero].pago;
                             let numberDiv = document.querySelector(`[data-numero='${numero}']`);
                             if (numberDiv) {
@@ -361,7 +365,13 @@
                                     nameElement.classList.add("amarelo");
                                 }
 
-                                nameElement.textContent = name;
+                                if(contato !== undefined) {
+                                    nameElement.textContent = nome + " / " + contato;
+                                }
+                                else{
+                                    nameElement.textContent = nome;
+                                }
+
                                 numberDiv.appendChild(nameElement);
                                 numberDiv.classList.add("confirmed");
                             }
@@ -378,20 +388,37 @@
 
         btnConfirmar.addEventListener("click", function () {
             let nome = inputNome.value.trim();
+            let contato = inputContato.value.trim();
             let numero = popupNumero.textContent.split(": ")[1];
 
-            if (nome === "") {
-                alert("Por favor, digite seu nome completo e contato.");
+            // Verificar se os campos estão preenchidos
+            if (nome === "" || contato === "") {
+                alert("Por favor, preencha todos os campos (nome e contato).");
                 return;
             }
 
-            // Verificar se o nome tem pelo menos 15 caracteres
-            if (nome.length < 15) {
-                alert("O nome deve ter pelo menos 15 caracteres.");
+            // Verificar limites de caracteres
+            if (nome.length < 10) {
+                alert("O nome deve ter no mínimo 10 caracteres.");
+                return;
+            }
+            else if(nome.length > 20){
+                alert("O nome deve ter no máximo 20 caracteres.");
                 return;
             }
 
-            set(ref(db, "rifa/" + numero), {  nome, pago: false  })
+            // Verificar limites de caracteres
+            if (contato.length < 8) {
+                alert("O contato deve ter no mínimo 8 caracteres.");
+                return;
+            }
+            else if(contato.length > 15){
+                alert("O contato deve ter no máximo 15 caracteres.");
+                return;
+            }
+
+
+            set(ref(db, "rifa/" + numero), {  nome, contato, pago: false  })
                 .then(() => {
                     alert("Número confirmado!");
 
@@ -401,7 +428,7 @@
 
                     let nameElement = document.createElement("div");
                     nameElement.classList.add("name-list");
-                    nameElement.textContent = nome;
+                    nameElement.textContent =  nome + " / " + contato;
                     numberDiv.appendChild(nameElement);
                     nameElement.classList.add("amarelo");  // Definir o fundo como amarelo inicialmente
 
