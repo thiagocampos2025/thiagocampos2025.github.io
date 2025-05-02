@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Pagamento - Rifa da luisa</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        #login-form, #logout-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        th {
+            background: #333;
+            color: white;
+        }
+        .btn-pagar {
+            padding: 5px 10px;
+            background: green;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .pago {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Controle de Pagamentos da Rifa</h1>
+
+<div id="login-form">
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="senha" placeholder="Senha">
+    <button id="entrar">Entrar</button>
+</div>
+
+<div id="logout-btn" style="display: none;">
+    <button id="sair">Sair</button>
+</div>
+
+<table id="tabela" style="display:none;">
+    <thead>
+        <tr>
+            <th>Número</th>
+            <th>Nome</th>
+            <th>Contato</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody id="rifa-tabela"></tbody>
+</table>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-database.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyDnnLK6XKU5nopcWTtdmlQe3vjBzPH4124",
+  authDomain: "rifaluisa-c439d.firebaseapp.com",
+  projectId: "rifaluisa-c439d",
+  storageBucket: "rifaluisa-c439d.firebasestorage.app",
+  messagingSenderId: "665017096123",
+  appId: "1:665017096123:web:5ee6bccbaa6fcfbdbb569e",
+  measurementId: "G-ZDTXQ0P4X0"
+};
+
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    const tabela = document.getElementById("rifa-tabela");
+    const tabelaDiv = document.getElementById("tabela");
+
+    function carregarDados() {
+        get(ref(db, "rifa")).then(snapshot => {
+            tabela.innerHTML = "";
+
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                for (let numero in data) {
+                    const { nome, contato, pago } = data[numero];
+                    const tr = document.createElement("tr");
+
+                    tr.innerHTML = `
+                        <td>${numero}</td>
+                        <td>${nome}</td>
+                        <td>${contato}</td>
+                        <td class="${pago ? 'pago' : ''}">${pago ? "Pago" : "Pendente"}</td>
+                        <td>
+                            ${!pago ? `<button class="btn-pagar" data-numero="${numero}">Marcar como pago</button>` : ""}
+                        </td>
+                    `;
+
+                    tabela.appendChild(tr);
+                }
+
+                document.querySelectorAll(".btn-pagar").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const numero = this.getAttribute("data-numero");
+                        update(ref(db, "rifa/" + numero), { pago: true }).then(() => {
+                            alert("Pagamento confirmado!");
+                            carregarDados();
+                        });
+                    });
+                });
+            }
+        });
+    }
+
+    // Login
+    document.getElementById("entrar").addEventListener("click", () => {
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
+
+        signInWithEmailAndPassword(auth, email, senha)
+            .then(() => {
+                console.log("Logado com sucesso");
+            })
+            .catch(error => {
+                alert("Erro ao fazer login: " + error.message);
+            });
+    });
+
+    // Logout
+    document.getElementById("sair").addEventListener("click", () => {
+        signOut(auth);
+    });
+
+    // Proteção
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("logout-btn").style.display = "flex";
+            tabelaDiv.style.display = "table";
+            carregarDados();
+        } else {
+            document.getElementById("login-form").style.display = "flex";
+            document.getElementById("logout-btn").style.display = "none";
+            tabelaDiv.style.display = "none";
+            tabela.innerHTML = "";
+        }
+    });
+</script>
+
+</body>
+</html>
+
