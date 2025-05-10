@@ -8,7 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            color: white;
+            color:greenyellow;
             margin: 0;
             padding: 0;
         }
@@ -58,7 +58,7 @@
         }
         .selected {
             background: gold;
-            color: black;
+            color:black;
             font-weight: bold;
         }
         .confirmed {
@@ -80,7 +80,7 @@
                     -2px 2px 0px #000; /* sombra inferior esquerda */
         }
         .subtitulo{
-            color:black;
+            color: black;
         }
 
         .pix {
@@ -88,19 +88,20 @@
             margin-top: 15px;
             font-weight: bold;
             color: black;
+            
         }
 
         .valor {
             margin-top: 15px;
             font-weight: bold;
             font-size: 30px;
-            color: black;
+            color:black;
             margin-bottom: 0 !important; /* Remover a margem inferior do valor */
         }
         .confPag {
             font-size: 18px;
             font-weight: bold;
-            color: black;
+            color:black;
             margin-bottom: 0 !important; /* Remover a margem inferior do valor */
         }
 
@@ -111,21 +112,24 @@
         .container .confPag {
             margin-top: 0;
             margin-bottom: 45px !important;
+          
         }
 
         .instagram {
             margin-top: 26px !important;
-            font size:30px;
-            color : rgba(0,0,0,0.7);
+            font-size: 30px;
+            color: rgba(0, 0, 0, 0.7);
+            
         }
         .instagram a {
             color: #FFD700;
             text-decoration: none;
-            font-size: 22px;
+            font-size: 30px;
         }
 
         .premio {
             font-size: 30px;
+            color:rgb(5, 15, 5);
         }
 
         .premio a {
@@ -139,7 +143,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             font-size: 16px;
-            color:#14130b
+            color: #14130b;
         }
         .popup {
             display: none;
@@ -274,7 +278,7 @@
 </head>
 <body>
 <div class="container">
-    <h1 class="titulo"> Ajudar a Luisa a realizar exames em Sao Paulo</h1>
+    <h1 class="titulo"> Rifa Beneficiente Luisa Valadares</h1>
     <h2 class="subtitulo"> Clique no número escolhido e informe o nome completo e contato.</h2>
 
     <div class="grid-container">
@@ -284,15 +288,15 @@
     <p class="valor">Valor R$ 30,00 </p>
     <p class="confPag">(Após confirmação do pagamento o número será validado.)</p>
     <p class="pix">PIX (62)985256056</p>
-    <p class="premio">  Veja o prêmio que você pode ganhar clicando  <a href="imagem/imagemLu.jpeg" target="_blank"> aqui!</a></p>
-    <p class="instagram">  É um celular Redmi 14, com 8GB de RAM e câmera dual com inteligência artificial. <a href="imagem/imagemLu.jpeg" target=""> aqui!</a></p>
-    <p class="">: <a href=" " target="_blank"></a></p>
+    <p class="premio"> Veja o prêmio que você pode ganhar clicando <a href="imagem/imagemLu.jpeg" target="_blank"> aqui!</a></p>
+    <p class="instagram">O premio e um celular Redmi 14 8G de ram camara dual com IA <a href="imagem/imagemLu1.jpeg" target="_blank">aqui!</a></p>
+     
     <marquee behavior="scroll" direction="left" scrollamount="10" style=" font-size: yellow; font-weight: bold; font-size: 20px; margin-top: 10px;">
-       Obrigado a todos que estão ajudando na rifa da Luisa. Sua contribuição é muito importante!
+        Sobre a rifa: O valor arrecadado ajudará a Luisa a realizar a consulta e exames em São Paulo.
       </marquee>
-
     <div class="descricao">
-        <p style="font-size: 20px"><strong>Sobre a rifa:</strong> O valor arrecadado ajudara a Luisa a realizar a consulta e exames em São Paulo</p>
+        <p style="font-size: 30px"><strong>Sobre a rifa:</strong> O valor arrecadado ajudara a Luisa a realizar a consulta e exames em São Paulo</p>
+        
     </div>
 </div>
 
@@ -337,7 +341,7 @@
         let selectedNumbers = [];
 
         // Criar os números de 1 a 200
-        for (let i = 1; i <= 200; i++) {
+        for (let i = 1; i <= 600; i++) {
             let div = document.createElement("div");
             div.textContent = i;
             div.dataset.numero = i;
