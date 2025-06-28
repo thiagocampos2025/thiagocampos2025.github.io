@@ -91,20 +91,12 @@
       margin-top: 15px;
       font-weight: bold;
       color: black;
-      text-shadow:
-        2px 2px 0px white,
-        -2px -2px 0px white,
-        2px -2px 0px white,
-        -2px 2px 0px white;
+      text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;
     }
 
     .subtitulo {
       color: black;
-      text-shadow:
-        2px 2px 0px white,
-        -2px -2px 0px white,
-        2px -2px 0px white,
-        -2px 2px 0px white;
+      text-shadow: 2px 2px 0px white, -2px -2px 0px white, 2px -2px 0px white, -2px 2px 0px white;
     }
 
     .pix, .valor, .confPag, .premio {
@@ -141,15 +133,21 @@
       text-decoration: none;
     }
 
-    .premio a {
-      color: black;
+    .botao-link {
+      display: inline-block;
+      background-color: #ff8800;
+      color: white;
+      padding: 8px 16px;
       text-decoration: none;
-      font-size: 30px;
-      text-shadow:
-        1px 1px 0px white,
-        -1px -1px 0px white,
-        1px -1px 0px white,
-        -1px 1px 0px white;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-left: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    .botao-link:hover {
+      background-color: #e76e00;
     }
 
     .descricao {
@@ -225,62 +223,9 @@
       background-color: green;
       color: white;
     }
-
-    @media (max-width: 768px) {
-      .container {
-        width: 95%;
-        max-width: 100%;
-      }
-
-      .titulo {
-        font-size: 20px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(5, 1fr);
-      }
-
-      .grid div {
-        padding: 15px;
-        font-size: 16px;
-      }
-
-      .valor, .pix, .instagram a {
-        font-size: 16px;
-      }
-
-      .descricao {
-        font-size: 14px;
-      }
-
-      .popup {
-        width: 80%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .grid div {
-        padding: 12px;
-        font-size: 14px;
-      }
-
-      .valor, .pix, .instagram a {
-        font-size: 28px;
-      }
-
-      .descricao {
-        font-size: 12px;
-      }
-    }
   </style>
 </head>
 <body>
-
-  <!-- 🎥 VÍDEO DE FUNDO -->
   <video autoplay muted loop id="video-fundo">
     <source src="fundo.mp4.mp4" type="video/mp4">
     Seu navegador não suporta vídeo em HTML5.
@@ -297,8 +242,13 @@
     <p class="valor">Valor R$ 10,00 </p>
     <p class="confPag">(Após confirmação do pagamento o número será validado.)</p>
     <p class="pix">PIX (62)982657003 Elisangela Rodrigues Lopes</p>
-    <p class="premio">O prêmio sera 2 vouchers jantar na churrascaria gramado <a href="img/imagem.logos.pdf"> clique aqui!</a></p>
-    <p class="confPag"> Conheça mais do curso produções cênicas Basileu França no Instagram <a href="https://www.instagram.com/dancabasileufranca" target="_blank">clicando aqui</a>.</p>
+    <p class="premio">O prêmio será 2 vouchers jantar na Churrascaria Gramado
+      <a href="img/imagem.logos.pdf" class="botao-link" target="_blank">Clique aqui</a>
+    </p>
+    <p class="confPag">
+      Conheça mais do curso Produções Cênicas Basileu França no Instagram
+      <a href="https://www.instagram.com/dancabasileufranca" class="botao-link" target="_blank">Clique aqui</a>
+    </p>
 
     <marquee behavior="scroll" direction="left" scrollamount="10" style="font-weight: bold; font-size: 20px; color: yellow;">
       A Gestão do curso de produção cênica agradece a todos e boa sorte!
